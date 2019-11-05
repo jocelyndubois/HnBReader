@@ -1,23 +1,23 @@
+var config = require('./config.json');
 var app = require('express')();
 var http = require('http').createServer(app);
 var io = require('socket.io')(http);
-const fs = require('fs')
+const fs = require('fs');
 const URL = require('url').URL;
-const myFileURL = new URL('file://192.168.0.47/LAN/data.json');
+const dataFileUrl = new URL(config.dataUrl);
 
 var globalData = {
   'floor': null,
   'players': {},
-}
+};
 
 function refreshData() {
-  fs.readFile(myFileURL, (err, data) => {
+  fs.readFile(dataFileUrl, (err, data) => {
     try {
         var data = JSON.parse(data);
 
         var floor = data.floor;
         if (Number.isInteger(floor) && globalData.floor != data['floor']) {
-          console.log('new flor : ' + floor);
           globalData.floor = floor;
           io.emit('floor update', floor);
         }
@@ -39,7 +39,6 @@ function refreshData() {
           for (let [id, player] of Object.entries(globalData.players)) {
             if (tempPlayers.indexOf(id) === -1) {
               delete globalData.players[id];
-              console.log(globalData.players);
             }
           }
 
@@ -77,14 +76,9 @@ io.on('connection', function(socket){
   io.emit('players update', globalData.players);
 });
 
-http.listen(3000, function(){
-  console.log('listening on *:3000');
+http.listen(config.port, function(){
+  console.log('listening on *:' + config.port);
 });
 
 refreshData();
-setInterval(function(){ refreshData();},1000)
-
-
-// app.listen(3000, function () {
-//   refreshData();
-// })
+setInterval(function(){ refreshData();},config.refreshDelay);

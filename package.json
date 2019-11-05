@@ -10,10 +10,6 @@
   "license": "ISC",
   "dependencies": {
     "express": "^4.17.1",
-    "log-timestamp": "^0.3.0",
-    "node-fetch": "^2.6.0",
-    "socker.io": "0.0.0-alpha-beta",
-    "socket.io": "^2.3.0",
-    "watchr": "^4.1.0"
+    "socket.io": "^2.3.0"
   }
 }

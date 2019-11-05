@@ -3,6 +3,7 @@
   <head>
     <title>HnB stats</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.20/css/dataTables.bootstrap4.min.css" crossorigin="anonymous">
   </head>
   <body>
     <div class="container">
@@ -13,7 +14,7 @@
         <p class="lead">Joueurs actifs : <b id="playerCounter"></b></p>
         <hr class="my-4">
         <div>
-          <table class="table">
+          <table id="players-table" class="table">
             <thead class="thead-dark">
               <tr>
                 <th scope="col">Joueur</th>
@@ -32,14 +33,25 @@
 
 <script src="/socket.io/socket.io.js"></script>
 <script src="https://code.jquery.com/jquery-1.11.1.js"></script>
+<script src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.10.20/js/dataTables.bootstrap4.min.js"></script>
 <script>
   $(function () {
+    var options = {
+      "order": [[ 1, "desc" ]],
+      "searching": false,
+      "paging": false,
+      "bInfo" : false,
+    }
+    var table = $('#players-table').DataTable(options);
     var socket = io();
     socket.on('floor update', function(msg){
       $('#floor').html(msg);
     });
 
     socket.on('players update', function(players){
+      table.destroy();
+      $('#players').html('');
       $('#playerCounter').html(Object.keys(players).length);
       for (let [id, player] of Object.entries(players)) {
         if($("#player-" + id).length == 0) {
@@ -49,6 +61,7 @@
         $("#player-" + id).find('.levels').html(player.levels);
         $("#player-" + id).find('.folies').html(player.folies);
       }
+      table = $('#players-table').DataTable(options);
     });
   });
 </script>
