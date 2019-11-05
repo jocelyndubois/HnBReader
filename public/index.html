@@ -1,0 +1,54 @@
+<!doctype html>
+<html>
+  <head>
+    <title>HnB stats</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+  </head>
+  <body>
+    <div class="container">
+      <div class="jumbotron" style="background-color: rgba(233,236,239,0.6);">
+        <h1 class="display-4">Hack N Bash stats</h1>
+
+        <p class="lead">Etage <b id="floor"></b> sur 12 !</p>
+        <p class="lead">Joueurs actifs : <b id="playerCounter"></b></p>
+        <hr class="my-4">
+        <div>
+          <table class="table">
+            <thead class="thead-dark">
+              <tr>
+                <th scope="col">Joueur</th>
+                <th scope="col">Niveau</th>
+                <th scope="col">Folie</th>
+              </tr>
+            </thead>
+            <tbody id="players">
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
+
+<script src="/socket.io/socket.io.js"></script>
+<script src="https://code.jquery.com/jquery-1.11.1.js"></script>
+<script>
+  $(function () {
+    var socket = io();
+    socket.on('floor update', function(msg){
+      $('#floor').html(msg);
+    });
+
+    socket.on('players update', function(players){
+      $('#playerCounter').html(Object.keys(players).length);
+      for (let [id, player] of Object.entries(players)) {
+        if($("#player-" + id).length == 0) {
+          $('#players').append($('<tr id="player-' + id + '">').append($('<td class="name">')).append($('<td class="levels">')).append($('<td class="folies">')));
+        }
+        $("#player-" + id).find('.name').html(player.name);
+        $("#player-" + id).find('.levels').html(player.levels);
+        $("#player-" + id).find('.folies').html(player.folies);
+      }
+    });
+  });
+</script>

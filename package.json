@@ -1,0 +1,19 @@
+{
+  "name": "hnbreader",
+  "version": "1.0.0",
+  "description": "Reader and displayer for Hack N Bash discord bot",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.17.1",
+    "log-timestamp": "^0.3.0",
+    "node-fetch": "^2.6.0",
+    "socker.io": "0.0.0-alpha-beta",
+    "socket.io": "^2.3.0",
+    "watchr": "^4.1.0"
+  }
+}
