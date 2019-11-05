@@ -5,11 +5,14 @@ var io = require('socket.io')(http);
 const fs = require('fs');
 const URL = require('url').URL;
 const dataFileUrl = new URL(config.dataUrl);
+const teamsFileUrl = new URL(config.teamsUrl);
 
 var globalData = {
   'floor': null,
   'players': {},
 };
+
+var globalTeams = {};
 
 function refreshData() {
   fs.readFile(dataFileUrl, (err, data) => {
@@ -42,7 +45,6 @@ function refreshData() {
             }
           }
 
-          // globalData.players = players;
           io.emit('players update', globalData.players);
         }
 
@@ -64,7 +66,51 @@ function refreshData() {
     } catch(e) {
         console.log(e)
     }
+
+      refreshTeams();
   });
+}
+
+function refreshTeams() {
+    fs.readFile(teamsFileUrl, (err, data) => {
+        try {
+            var teams = JSON.parse(data);
+            var player1 = 0;
+            var player2 = 1;
+            var teamLevel = 2;
+            var needEmit = false;
+
+            var tempTeams = [];
+            for (let [name, infos] of Object.entries(teams)) {
+                tempTeams.push(name);
+                if (globalTeams[name] === undefined || (globalTeams[name].level !== undefined && (globalTeams[name].level != infos[teamLevel]))) {
+                    team = {};
+                    if (globalData.players[infos[player1]] !== undefined && globalData.players[infos[player2]] !== undefined) {
+                        team.player1 = globalData.players[infos[player1]].name;
+                        team.player2 = globalData.players[infos[player2]].name;
+                        team.level = infos[teamLevel];
+
+                        globalTeams[name] = team;
+                    }
+
+                    needEmit = true;
+                }
+            }
+
+            for (let [name, infos] of Object.entries(globalTeams)) {
+                if (tempTeams.indexOf(name) === -1) {
+                    needEmit = true;
+                    delete globalTeams[name];
+                }
+            }
+
+            if (needEmit) {
+                io.emit('teams update', globalTeams);
+            }
+        } catch(e) {
+            console.log(e)
+        }
+    });
 }
 
 app.get('/', function(req, res){
@@ -74,6 +120,7 @@ app.get('/', function(req, res){
 io.on('connection', function(socket){
   io.emit('floor update', globalData.floor);
   io.emit('players update', globalData.players);
+  io.emit('teams update', globalTeams);
 });
 
 http.listen(config.port, function(){

@@ -13,18 +13,34 @@
         <p class="lead">Etage <b id="floor"></b> sur 12 !</p>
         <p class="lead">Joueurs actifs : <b id="playerCounter"></b></p>
         <hr class="my-4">
-        <div>
-          <table id="players-table" class="table">
-            <thead class="thead-dark">
+        <div class="row">
+          <div class="col-sm">
+            <table id="players-table" class="table">
+              <thead class="thead-dark">
               <tr>
                 <th scope="col">Joueur</th>
                 <th scope="col">Niveau</th>
                 <th scope="col">Folie</th>
               </tr>
-            </thead>
-            <tbody id="players">
-            </tbody>
-          </table>
+              </thead>
+              <tbody id="players">
+              </tbody>
+            </table>
+          </div>
+          <div class="col-sm">
+            <table id="teams-table" class="table">
+              <thead class="thead-dark">
+              <tr>
+                <th scope="col">Nom d'équipe</th>
+                <th scope="col">Joueurs</th>
+                <th scope="col">&nbsp;</th>
+                <th scope="col">Niveau</th>
+              </tr>
+              </thead>
+              <tbody id="teams">
+              </tbody>
+            </table>
+          </div>
         </div>
       </div>
     </div>
@@ -37,20 +53,36 @@
 <script src="https://cdn.datatables.net/1.10.20/js/dataTables.bootstrap4.min.js"></script>
 <script>
   $(function () {
-    var options = {
+    var optionsPlayers = {
       "order": [[ 1, "desc" ]],
       "searching": false,
       "paging": false,
       "bInfo" : false,
-    }
-    var table = $('#players-table').DataTable(options);
+      "columnDefs": [
+        { "orderable": false, "targets": 0 },
+        { "orderable": false, "targets": 2 }
+      ]
+    };
+    var tablePlayers = $('#players-table').DataTable(optionsPlayers);
+    var optionsTeams = {
+      "order": [[ 3, "desc" ]],
+      "searching": false,
+      "paging": false,
+      "bInfo" : false,
+      "columnDefs": [
+        { "orderable": false, "targets": 0 },
+        { "orderable": false, "targets": 1 },
+        { "orderable": false, "targets": 2 }
+      ]
+    };
+    var tableTeams = $('#teams-table').DataTable(optionsTeams);
     var socket = io();
     socket.on('floor update', function(msg){
       $('#floor').html(msg);
     });
 
     socket.on('players update', function(players){
-      table.destroy();
+      tablePlayers.destroy();
       $('#players').html('');
       $('#playerCounter').html(Object.keys(players).length);
       for (let [id, player] of Object.entries(players)) {
@@ -61,7 +93,23 @@
         $("#player-" + id).find('.levels').html(player.levels);
         $("#player-" + id).find('.folies').html(player.folies);
       }
-      table = $('#players-table').DataTable(options);
+      tablePlayers = $('#players-table').DataTable(optionsPlayers);
+    });
+
+    socket.on('teams update', function(teams){
+      tableTeams.destroy();
+      $('#teams').html('');
+        console.log(teams);
+      for (let [name, infos] of Object.entries(teams)) {
+        if($("#team-" + name).length == 0) {
+          $('#teams').append($('<tr id="team-' + name + '">').append($('<td class="name">')).append($('<td class="player1">')).append($('<td class="player2">')).append($('<td class="level">')));
+        }
+        $("#team-" + name).find('.name').html(name);
+        $("#team-" + name).find('.player1').html(infos.player1);
+        $("#team-" + name).find('.player2').html(infos.player2);
+        $("#team-" + name).find('.level').html(infos.level);
+      }
+      tableTeams = $('#teams-table').DataTable(optionsTeams);
     });
   });
 </script>
