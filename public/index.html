@@ -52,6 +52,15 @@
 <script src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js"></script>
 <script src="https://cdn.datatables.net/1.10.20/js/dataTables.bootstrap4.min.js"></script>
 <script>
+  var slug = function(str) {
+    var $slug = '';
+    var trimmed = $.trim(str);
+    $slug = trimmed.replace(/[^a-z0-9-]/gi, '-').
+    replace(/-+/g, '-').
+    replace(/^-|-$/g, '');
+    return $slug.toLowerCase();
+  }
+
   $(function () {
     var optionsPlayers = {
       "order": [[ 1, "desc" ]],
@@ -101,13 +110,13 @@
       $('#teams').html('');
         console.log(teams);
       for (let [name, infos] of Object.entries(teams)) {
-        if($("#team-" + name).length == 0) {
-          $('#teams').append($('<tr id="team-' + name + '">').append($('<td class="name">')).append($('<td class="player1">')).append($('<td class="player2">')).append($('<td class="level">')));
+        if($("#team-" + slug(name)).length == 0) {
+          $('#teams').append($('<tr id="team-' + slug(name) + '">').append($('<td class="name">')).append($('<td class="player1">')).append($('<td class="player2">')).append($('<td class="level">')));
         }
-        $("#team-" + name).find('.name').html(name);
-        $("#team-" + name).find('.player1').html(infos.player1);
-        $("#team-" + name).find('.player2').html(infos.player2);
-        $("#team-" + name).find('.level').html(infos.level);
+        $("#team-" + slug(name)).find('.name').html(name);
+        $("#team-" + slug(name)).find('.player1').html(infos.player1);
+        $("#team-" + slug(name)).find('.player2').html(infos.player2);
+        $("#team-" + slug(name)).find('.level').html(infos.level);
       }
       tableTeams = $('#teams-table').DataTable(optionsTeams);
     });
