@@ -1,0 +1,98 @@
+<!doctype html>
+<html>
+<head>
+    <title>HnB stats</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+</head>
+<body>
+<div class="container">
+    <br/>
+    <center>
+        <div class="container">
+            <div class="row">
+                <div class="col-sm">
+                    <div class="btn-group" role="group" aria-label="Categories">
+                        <button type="button" id="all" class="btn btn-secondary btn-rarity">Tous</button>
+                        <button type="button" id="legendary" class="btn btn-secondary btn-rarity">Légendaires</button>
+                        <button type="button" id="rare" class="btn btn-secondary btn-rarity">Rares</button>
+                        <button type="button" id="magical" class="btn btn-secondary btn-rarity">Magiques</button>
+                        <button type="button" id="common" class="btn btn-secondary btn-rarity">Communs</button>
+                    </div>
+                </div>
+                <div class="col-sm">
+                    <div class="input-group mb-2">
+                        <div class="input-group-prepend">
+                            <div class="input-group-text"><span class="fas fa-search"></span></div>
+                        </div>
+                        <input type="text" class="form-control" id="search" placeholder="Search">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </center>
+    <br/>
+    <div id="items">
+    </div>
+</div>
+</body>
+</html>
+
+<script src="/socket.io/socket.io.js"></script>
+<script src="https://code.jquery.com/jquery-1.11.1.js"></script>
+<script src="https://unpkg.com/isotope-layout@3/dist/isotope.pkgd.js"></script>
+<script src="https://kit.fontawesome.com/5bd39443d0.js" crossorigin="anonymous"></script>
+
+<script>
+    $(function () {
+        var socket = io();
+
+        var $grid = null;
+
+        socket.on('items update', function (items) {
+            console.log(items);
+            for (let [type, infos] of Object.entries(items)) {
+                var list = infos.list;
+                for (var i = 0; i < list.length; i++) {
+                    $('#items')
+                        .append($('<div class="card ' + type + '" style="width: 17.3rem;">')
+                            .append($('<div class="card-body">')
+                                .append($('<h5 class="card-title name" style="color: ' + infos.color + '">' + list[i].name + '</h5>'))
+                                .append($('<ul>')
+                                    .append($('<li> ').append('Capacité offensive : <b class="offensive">' + list[i].offensive + '</b>'))
+                                    .append($('<li> ').append('Capacité défensive : <b class="défensive">' + list[i].defensive + '</b>'))
+                                    .append($('<li> ').append('Folie : <b class="folie">' + list[i].folie + '</b>'))
+                                    .append($('<li> ').append('Chance de loot : <b class="loot">' + list[i].loot + '</b>'))
+                                    .append($('<li> ').append('Experience : <b class="experience">' + list[i].experience + '</b>'))
+                                    .append($('<li> ').append('Résistance à la perte de niveaux : <b class="lesslevels">' + list[i].lesslevels + '</b>'))
+                                    .append($('<li> ').append('prison : <b class="prison">' + list[i].prison + '</b>'))
+                                )
+                            )
+                        );
+                }
+            }
+            $grid = $('#items').isotope({
+                itemSelector: '.card',
+                layoutMode: 'fitRows'
+            });
+        });
+
+        $(".btn-rarity").click(function () {
+            if ($(this).attr('id') == 'all') {
+                $grid.isotope({filter: '*'});
+            } else {
+                $grid.isotope({filter: '.' + $(this).attr('id')});
+            }
+        });
+
+        $('#search').keypress(function () {
+            var that = $(this);
+            $grid.isotope({
+                filter: function () {
+                    var name = $(this).find('.name').text().toUpperCase();
+                    return name.indexOf(that.val().toUpperCase()) >= 0 ;
+                }
+            });
+        });
+    });
+</script>

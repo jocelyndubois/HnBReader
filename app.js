@@ -117,10 +117,17 @@ app.get('/', function(req, res){
   res.sendFile(__dirname + '/public/index.html');
 });
 
+app.get('/items/', function(req, res){
+  res.sendFile(__dirname + '/public/items.html');
+});
+
 io.on('connection', function(socket){
   io.emit('floor update', globalData.floor);
   io.emit('players update', globalData.players);
   io.emit('teams update', globalTeams);
+
+  var items = require('./data/items.json');
+  io.emit('items update', items);
 });
 
 http.listen(config.port, function(){

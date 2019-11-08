@@ -1,0 +1,182 @@
+{
+  "legendary": {
+    "color": "#8B48AF",
+    "list": [
+      {
+        "name" : "Pari des Rats",
+        "offensive" : 3,
+        "defensive" : 0,
+        "folie" : 3,
+        "loot" : 1,
+        "experience" : -1,
+        "lesslevels" : 1,
+        "prison" : 2
+      },
+      {
+        "name" : "Tentacule de Yurgen",
+        "offensive" : 2,
+        "defensive" : 0,
+        "folie" : -2,
+        "loot" : 0,
+        "experience" : 1,
+        "lesslevels" : 5,
+        "prison" : 0
+      },
+      {
+        "name" : "Katana pestilentiel",
+        "offensive" : 2,
+        "defensive" : 0,
+        "folie" : 5,
+        "loot" : 0,
+        "experience" : -3,
+        "lesslevels" : -3,
+        "prison" : 0
+      }
+    ]
+  },
+  "rare" : {
+    "color": "#F1C40F",
+    "list": [
+      {
+        "name" : "Tourbillon de cristal",
+        "offensive" : 0,
+        "defensive" : 1,
+        "folie" : -1,
+        "loot" : 0,
+        "experience" : 0,
+        "lesslevels" : 5,
+        "prison" : 1
+      },
+      {
+        "name" : "Arc Elfique",
+        "offensive" : 2,
+        "defensive" : 1,
+        "folie" : -1,
+        "loot" : 0,
+        "experience" : 1,
+        "lesslevels" : 0,
+        "prison" : 1
+      },
+      {
+        "name" : "Marteau des Gnomes",
+        "offensive" : 0,
+        "defensive" : 0,
+        "folie" : -1,
+        "loot" : 0,
+        "experience" : 3,
+        "lesslevels" : 0,
+        "prison" : 1
+      },
+      {
+        "name" : "Coeur de Démon",
+        "offensive" : 2,
+        "defensive" : 0,
+        "folie" : 2,
+        "loot" : 0,
+        "experience" : 2,
+        "lesslevels" : 0,
+        "prison" : 0
+      },
+      {
+        "name" : "Tourbillon de Cristal",
+        "offensive" : 0,
+        "defensive" : 1,
+        "folie" : -1,
+        "loot" : 0,
+        "experience" : 0,
+        "lesslevels" : 5,
+        "prison" : 1
+      }
+    ]
+  },
+  "magical" : {
+    "color": "#3598D9",
+    "list": [
+      {
+        "name" : "Trident",
+        "offensive" : 1,
+        "defensive" : 0,
+        "folie" : 1,
+        "loot" : 0,
+        "experience" : 1,
+        "lesslevels" : 1,
+        "prison" : 0
+      },
+      {
+        "name" : "Clef Magique",
+        "offensive" : 0,
+        "defensive" : 0,
+        "folie" : 0,
+        "loot" : 1,
+        "experience" : 0,
+        "lesslevels" : 0,
+        "prison" : 2
+      },
+      {
+        "name" : "Trident",
+        "offensive" : 1,
+        "defensive" : 0,
+        "folie" : 1,
+        "loot" : 0,
+        "experience" : 1,
+        "lesslevels" : 1,
+        "prison" : 0
+      },
+      {
+        "name" : "Anneau des dieux",
+        "offensive" : 0,
+        "defensive" : 0,
+        "folie" : 1,
+        "loot" : 1,
+        "experience" : 1,
+        "lesslevels" : 1,
+        "prison" : 0
+      },
+      {
+        "name" : "Médaillon du Chaos",
+        "offensive" : 0,
+        "defensive" : 0,
+        "folie" : 1,
+        "loot" : 1,
+        "experience" : -1,
+        "lesslevels" : 0,
+        "prison" : 0
+      }
+    ]
+  },
+  "common" : {
+    "color": "#BEC3C7",
+    "list": [
+      {
+        "name" : "Ecu",
+        "offensive" : 0,
+        "defensive" : 1,
+        "folie" : 0,
+        "loot" : 0,
+        "experience" : 0,
+        "lesslevels" : 0,
+        "prison" : 0
+      },
+      {
+        "name" : "Poignard",
+        "offensive" : 1,
+        "defensive" : 0,
+        "folie" : 0,
+        "loot" : 0,
+        "experience" : 0,
+        "lesslevels" : 0,
+        "prison" : 0
+      },
+      {
+        "name" : "Anneau simple",
+        "offensive" : 0,
+        "defensive" : 0,
+        "folie" : 0,
+        "loot" : 0,
+        "experience" : 1,
+        "lesslevels" : 1,
+        "prison" : 0
+      }
+    ]
+  }
+}
