@@ -21,6 +21,11 @@
                     </div>
                 </div>
                 <div class="col-sm">
+                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addModal">
+                        Ajouter un item
+                    </button>
+                </div>
+                <div class="col-sm">
                     <div class="input-group mb-2">
                         <div class="input-group-prepend">
                             <div class="input-group-text"><span class="fas fa-search"></span></div>
@@ -32,9 +37,76 @@
         </div>
     </center>
     <br/>
+
+    <div id="alerts"></div>
+
     <div id="items">
     </div>
 </div>
+
+
+<div id="addModal" class="modal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Ajout d'un item</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="itemForm">
+                    <div class="form-group">
+                        <label for="itemName">Nom de l'item</label>
+                        <input type="text" class="form-control" id="itemName" name="itemName" placeholder="Nom de l'item">
+                    </div>
+                    <div class="form-group">
+                        <label for="itemRarity">Rareté</label>
+                        <select class="form-control" id="itemRarity" name="itemRarity">
+                            <option value="legendary" style="color: #8B48AF">Légendaire</option>
+                            <option value="rare" style="color: #F1C40F">Rare</option>
+                            <option value="magical" style="color: #3598D9">Magique</option>
+                            <option value="common" style="color: #BEC3C7">Commun</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="itemOffensive">Capacité offensive</label>
+                        <input type="number" class="form-control" id="itemOffensive" name="itemOffensive" value="0">
+                    </div>
+                    <div class="form-group">
+                        <label for="itemDéfensive">Capacité défensive</label>
+                        <input type="number" class="form-control" id="itemDéfensive" name="itemDéfensive" value="0">
+                    </div>
+                    <div class="form-group">
+                        <label for="itemFolie">Folie</label>
+                        <input type="number" class="form-control" id="itemFolie" name="itemFolie" value="0">
+                    </div>
+                    <div class="form-group">
+                        <label for="itemLoot">Chance de loot</label>
+                        <input type="number" class="form-control" id="itemLoot" name="itemLoot" value="0">
+                    </div>
+                    <div class="form-group">
+                        <label for="itemExperience">Experience</label>
+                        <input type="number" class="form-control" id="itemExperience" name="itemExperience" value="0">
+                    </div>
+                    <div class="form-group">
+                        <label for="itemLesslevels">Résistance à la perte de niveaux</label>
+                        <input type="number" class="form-control" id="itemLesslevels" name="itemLesslevels" value="0">
+                    </div>
+                    <div class="form-group">
+                        <label for="itemPrison">Chance de s'échapper de prison</label>
+                        <input type="number" class="form-control" id="itemPrison" name="itemPrison" value="0">
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
+                <button type="button" class="btn btn-success" id="saveItem">Sauvegarder</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 </body>
 </html>
 
@@ -42,6 +114,7 @@
 <script src="https://code.jquery.com/jquery-1.11.1.js"></script>
 <script src="https://unpkg.com/isotope-layout@3/dist/isotope.pkgd.js"></script>
 <script src="https://kit.fontawesome.com/5bd39443d0.js" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
 
 <script>
     $(function () {
@@ -50,11 +123,13 @@
         var $grid = null;
 
         socket.on('items update', function (items) {
-            console.log(items);
+            $grid = null;
+            $('#items').html('');
+            $('#items').append($('<div id="itemCards">'));
             for (let [type, infos] of Object.entries(items)) {
                 var list = infos.list;
                 for (var i = 0; i < list.length; i++) {
-                    $('#items')
+                    $('#itemCards')
                         .append($('<div class="card ' + type + '" style="width: 17.3rem;">')
                             .append($('<div class="card-body">')
                                 .append($('<h5 class="card-title name" style="color: ' + infos.color + '">' + list[i].name + '</h5>'))
@@ -65,16 +140,21 @@
                                     .append($('<li> ').append('Chance de loot : <b class="loot">' + list[i].loot + '</b>'))
                                     .append($('<li> ').append('Experience : <b class="experience">' + list[i].experience + '</b>'))
                                     .append($('<li> ').append('Résistance à la perte de niveaux : <b class="lesslevels">' + list[i].lesslevels + '</b>'))
-                                    .append($('<li> ').append('prison : <b class="prison">' + list[i].prison + '</b>'))
+                                    .append($('<li> ').append('Chance de s\'échapper de prison : <b class="prison">' + list[i].prison + '</b>'))
                                 )
                             )
                         );
                 }
             }
-            $grid = $('#items').isotope({
+            $grid = $('#itemCards').isotope({
                 itemSelector: '.card',
                 layoutMode: 'fitRows'
             });
+        });
+
+        socket.on('itemFeedback', function (message) {
+            $('.alert').alert('close')
+            $('#alerts').append($('<div class="alert alert-' + message.type + '" role="alert">' + message.text + '</div>'));
         });
 
         $(".btn-rarity").click(function () {
@@ -93,6 +173,19 @@
                     return name.indexOf(that.val().toUpperCase()) >= 0 ;
                 }
             });
+        });
+
+        $('#saveItem').click(function () {
+            socket.emit('addItem', $('form').serializeArray());
+            $('#addModal').modal('hide');
+            $('#itemName').val('');
+            $('#itemRarity').val('legendary');
+            $('#itemDéfensive').val(0);
+            $('#itemFolie').val(0);
+            $('#itemLoot').val(0);
+            $('#itemExperience').val(0);
+            $('#itemLesslevels').val(0);
+            $('#itemPrison').val(0);
         });
     });
 </script>

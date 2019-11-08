@@ -78,13 +78,13 @@
         "prison" : 0
       },
       {
-        "name" : "Tourbillon de Cristal",
-        "offensive" : 0,
-        "defensive" : 1,
-        "folie" : -1,
+        "name" : "Masque Vengeur",
+        "offensive" : 1,
+        "defensive" : 0,
+        "folie" : -2,
         "loot" : 0,
-        "experience" : 0,
-        "lesslevels" : 5,
+        "experience" : 2,
+        "lesslevels" : 1,
         "prison" : 1
       }
     ]
@@ -113,16 +113,6 @@
         "prison" : 2
       },
       {
-        "name" : "Trident",
-        "offensive" : 1,
-        "defensive" : 0,
-        "folie" : 1,
-        "loot" : 0,
-        "experience" : 1,
-        "lesslevels" : 1,
-        "prison" : 0
-      },
-      {
         "name" : "Anneau des dieux",
         "offensive" : 0,
         "defensive" : 0,
@@ -140,6 +130,16 @@
         "loot" : 1,
         "experience" : -1,
         "lesslevels" : 0,
+        "prison" : 0
+      },
+      {
+        "name" : "Katar",
+        "offensive" : 2,
+        "defensive" : -1,
+        "folie" : 1,
+        "loot" : 0,
+        "experience" : 0,
+        "lesslevels" : 1,
         "prison" : 0
       }
     ]
@@ -175,6 +175,26 @@
         "loot" : 0,
         "experience" : 1,
         "lesslevels" : 1,
+        "prison" : 0
+      },
+      {
+        "name" : "Gourdin",
+        "offensive" : 1,
+        "defensive" : 0,
+        "folie" : 0,
+        "loot" : 0,
+        "experience" : 0,
+        "lesslevels" : 0,
+        "prison" : 0
+      },
+      {
+        "name" : "Médaille bénite",
+        "offensive" : 0,
+        "defensive" : 0,
+        "folie" : 0,
+        "loot" : 1,
+        "experience" : 1,
+        "lesslevels" : 0,
         "prison" : 0
       }
     ]

@@ -126,13 +126,77 @@ io.on('connection', function(socket){
   io.emit('players update', globalData.players);
   io.emit('teams update', globalTeams);
 
-  var items = require('./data/items.json');
-  io.emit('items update', items);
+  emitItems();
+
+  socket.on('addItem', function (newItem) {
+    fs.readFile('./data/items.json', (err, data) => {
+        var items = JSON.parse(data);
+        var found = false;
+        var returnValue = {};
+        var keyField = {};
+
+
+        for (var i = 0; i < newItem.length; i++) {
+            keyField[newItem[i].name] = i;
+        }
+
+        for (let [type, infos] of Object.entries(items)) {
+            var list = infos.list;
+            for (var i = 0; i < list.length; i++) {
+
+                if (list[i].name.toUpperCase() === newItem[0].value.toUpperCase()) {
+                    found = true;
+                }
+            }
+        }
+
+        if (found) {
+            returnValue = {'type': "warning", "text": "L'item existe déjà !"};
+        } else {
+            var finalItem = {
+                "name" : newItem[keyField.itemName].value,
+                "offensive" : newItem[keyField.itemOffensive].value,
+                "defensive" : newItem[keyField.itemDéfensive].value,
+                "folie" : newItem[keyField.itemFolie].value,
+                "loot" : newItem[keyField.itemLoot].value,
+                "experience" : newItem[keyField.itemExperience].value,
+                "lesslevels" : newItem[keyField.itemLesslevels].value,
+                "prison" : newItem[keyField.itemPrison].value
+            };
+
+            items[newItem[keyField.itemRarity].value].list.push(finalItem);
+
+            try {
+                fs.writeFile("./data/items.json", JSON.stringify(items), function(err) {
+                    if(err) {
+                        throw err;
+                    }
+                });
+                returnValue = {'type': "success", "text": "Item ajouté !"};
+            } catch(e) {
+                returnValue = {'type': "error", "text": "Enregistrement échoué !"};
+            }
+        }
+
+        io.emit('itemFeedback', returnValue);
+        emitItems();
+    });
+  });
 });
+
+function emitItems()
+{
+    fs.readFile('./data/items.json', (err, data) => {
+        var items = JSON.parse(data);
+        io.emit('items update', items);
+    });
+}
 
 http.listen(config.port, function(){
   console.log('listening on *:' + config.port);
 });
+
+
 
 refreshData();
 setInterval(function(){ refreshData();},config.refreshDelay);
